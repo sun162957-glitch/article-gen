@@ -1,7 +1,7 @@
 # 公众号文章生成器 (gen-article)
 
 ## 描述
-通用公众号文章生成技能。用户输入类目、字数、风格，自动完成从素材抓取到HTML产出的全流程。
+通用公众号文章生成技能。用户输入类目、字数、风格，自动生成公众号文章。
 
 ## 触发方式
 用户输入 `/gen-article` 或说"写公众号文章"
@@ -19,25 +19,38 @@
    - 故事型：完整故事线，有起承转合
    - 干货型：条理清晰，有知识点
    - 观点型：有立场，有论证
-4. **目标平台**（可选，默认微信公众号）
+4. **素材来源**（可选，默认AI生成）：
+   - AI生成：不需要安装任何工具，Claude 直接根据类目创作
+   - 爬虫抓取：需要安装 ForgeRSS（见下方"高级功能"）
 5. **特殊要求**（可选）：如"要有争议性""要正能量"等
 
-### 第1步：素材抓取
+### 第1步：素材获取
 
-根据用户输入的类目，决定搜索关键词和抓取源。
+**模式A：AI生成（默认，零依赖）**
 
-**小红书抓取**（优先）：
+不需要安装任何外部工具。Claude 根据用户输入的类目，直接创作文章内容。
+
+Claude 会：
+- 根据类目确定主题方向
+- 结合该领域的常见话题和热点
+- 创作符合风格要求的原创内容
+
+**模式B：爬虫抓取（高级功能，需要安装工具）**
+
+如果用户选择"爬虫抓取"模式，且已安装 ForgeRSS，则：
+
+小红书抓取：
 ```bash
-cd ARTICLE_GEN_DIR
-python scripts/fetch_xhs.py --keywords "关键词1,关键词2"
+cd FORGERSS_DIR
+python fetch_xhs_content.py
 ```
 
-**知乎抓取**（补充深度内容）：
+知乎抓取：
 ```bash
-python scripts/fetch_zhihu.py --max 10
+python scripts/run_single.py zhihu_hot --max 10
 ```
 
-**关键词生成规则**（根据类目自动扩展）：
+关键词生成规则（根据类目自动扩展）：
 | 类目 | 搜索关键词示例 |
 |------|---------------|
 | 情感 | 暗恋 分手 心事 树洞 婚姻 出轨 |
@@ -48,7 +61,7 @@ python scripts/fetch_zhihu.py --max 10
 | 故事 | 真实经历 树洞 匿名 投稿 |
 | 生活 | 独居 租房 搬家 记账 省钱 |
 
-### 第2步：筛选加工
+### 第2步：筛选加工（仅爬虫模式）
 
 - 过滤与类目相关的关键词
 - 清理文本（去话题标签、表情、广告、引流话术）
@@ -134,6 +147,25 @@ python scripts/fetch_zhihu.py --max 10
 **选图原则：** 与文章核心场景强关联的写实画面
 
 ## 快捷指令
-- `/gen-article 情感 300字 倾诉型`
-- `/gen-article 科技 500字 干货型`
-- `/gen-article 故事 800字 故事型`
+- `/gen-article 情感 300字 倾诉型` — AI生成，零依赖
+- `/gen-article 科技 500字 干货型` — AI生成，零依赖
+- `/gen-article 故事 800字 故事型` — AI生成，零依赖
+
+## 高级功能：爬虫抓取（可选）
+
+如果需要从真实平台抓取素材，可安装 ForgeRSS：
+
+```bash
+git clone https://github.com/tmwgsicp/ForgeRSS.git
+cd ForgeRSS
+python -m venv venv
+venv\Scripts\pip install -r requirements.txt
+
+# 登录小红书（首次需要扫码）
+venv\Scripts\python.exe -m generators.social.xiaohongshu.scraper --login
+
+# 登录知乎（首次需要扫码）
+venv\Scripts\python.exe -m generators.social.zhihu.scraper --login
+```
+
+安装后，使用 `/gen-article` 时选择"爬虫抓取"模式即可。
