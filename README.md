@@ -33,6 +33,18 @@ copy article-gen\skills\gen-article.md %USERPROFILE%\.claude\skills\
 
 完成！现在可以直接使用了。
 
+### 情感文章专用 Skill
+
+仓库同时提供一套更细致的情感文章生产流程，适合处理树洞投稿、Telegram 素材、聊天截图和读者故事：
+
+```text
+skills/wechat-emotional-article/SKILL.md
+```
+
+这套 Skill 包含素材事实边界、主题提炼、口语化写作、`human-writing` 去 AI 味、钩子标题生成、标题与正文风险检查、中文数字/阿拉伯数字语境规则，以及手机端公众号 HTML 排版。
+
+使用时可直接引用 `wechat-emotional-article`，或将 `SKILL.md` 复制到你的 agent 技能目录。
+
 ### 高级安装（可选，支持爬虫抓取）
 
 如果需要从真实平台（小红书/知乎）抓取素材：
@@ -150,3 +162,4 @@ MIT License
 - [ForgeRSS](https://github.com/tmwgsicp/ForgeRSS) — 素材抓取工具（可选）
 - [Unsplash](https://unsplash.com) — 免费商用图片
 - [Claude Code](https://claude.ai/code) — AI 编程助手
+
